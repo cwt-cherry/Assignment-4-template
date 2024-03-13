@@ -107,7 +107,7 @@ public:
   // Make sure you check input validity for the energy in the 4-momentum 
   void set_energy(double particle_energy)
   {
-    if(speed_of_light >= particle_energy && particle_energy >= 0)
+    if(particle_energy >= 0) // not limiting energy to the speed of light due to change in slides
     {
       energy = particle_energy;
     }
@@ -116,6 +116,27 @@ public:
       std::cerr<<"Invalid energy. Energy should be between 0 and the speed of light."<<std::endl;
       exit(0);
     }
+  }
+
+  // Sum operator
+  particle operator+(const particle &other) const
+  {
+    // particle sum // initialise
+    // {
+    //   "", 0, false, get_energy() + other.get_energy(), get_momentum_x() + other.get_momentum_x(), get_momentum_y() + other.get_momentum_y(), get_momentum_z() + other.get_momentum_z()
+    // };
+    particle sum;
+    sum.set_energy(get_energy() + other.get_energy());
+    sum.set_momentum_x(get_momentum_x() + other.get_momentum_x());
+    sum.set_momentum_y(get_momentum_y() + other.get_momentum_y());
+    sum.set_momentum_z(get_momentum_z() + other.get_momentum_z());
+    return sum;
+  }
+
+  // Dot product operator
+  double dot_product(const particle& other) const
+  {
+    return (get_energy() * other.get_energy(), get_momentum_x() * other.get_momentum_x(), get_momentum_y() * other.get_momentum_y(), get_momentum_z() * other.get_momentum_z());
   }
 
   // Function to print info about a particle 
@@ -169,6 +190,7 @@ int main()
 
   // Sum the four-momenta of the two electrons 
   // Do the dot product of the first two four-muons
+
   // Assignment operator of an electron to a new electron
   // Copy constructor of the first muon to a new muon
   // Move the antielectron into another antielectron using the move constructor 
