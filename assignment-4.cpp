@@ -71,6 +71,18 @@ public:
   // The move assignment operator needs to correctly reassign the memory from the original object
   
   // Getter functions (accessors) to individual elements of 4-momentum
+  string get_name() const
+  {
+    return name;
+  }
+  int get_charge() const
+  {
+    return charge;
+  }
+  bool get_antiparticle() const
+  {
+    return antiparticle;
+  }
   double get_energy() const
   {
     return energy;
@@ -92,17 +104,33 @@ public:
   }
 
   // Setter functions, to change values of 4-momentum 
-  void set_momentum_x(double particle_energy)
+  void set_name(string particle_name)
   {
-    momentum_x = particle_energy / speed_of_light;
+    if(particle_name == "electron" || particle_name == "positron" || particle_name == "muon" || particle_name == "antimuon")
+    {
+      name = particle_name;
+    }
+    else
+    {
+      std::cerr << "Invalid particle name." << std::endl;
+      exit(0);
+    }
   }
-  void set_momentum_y(double particle_energy)
+  void set_charge(int particle_charge)
   {
-    momentum_y = particle_energy / speed_of_light;
+    if(particle_charge == 1 || particle_charge == -1)
+    {
+      charge = particle_charge;
+    }
+    else
+    {
+      std::cerr << "Invalid particle charge. Value should be either +1 or -1" << std::endl;
+      exit(0);
+    }
   }
-  void set_momentum_z(double particle_energy)
+  void set_antiparticle(bool particle_antiparticle)
   {
-    momentum_z = particle_energy / speed_of_light;
+    antiparticle = particle_antiparticle;
   }
   // Make sure you check input validity for the energy in the 4-momentum 
   void set_energy(double particle_energy)
@@ -116,6 +144,18 @@ public:
       std::cerr<<"Invalid energy. Energy should be between 0 and the speed of light."<<std::endl;
       exit(0);
     }
+  }
+  void set_momentum_x(double particle_energy)
+  {
+    momentum_x = particle_energy / speed_of_light;
+  }
+  void set_momentum_y(double particle_energy)
+  {
+    momentum_y = particle_energy / speed_of_light;
+  }
+  void set_momentum_z(double particle_energy)
+  {
+    momentum_z = particle_energy / speed_of_light;
   }
 
   // Sum operator
