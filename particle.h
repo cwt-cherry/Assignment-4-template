@@ -1,3 +1,6 @@
+#ifndef PARTICLE_H
+#define PARTICLE_H
+
 #include<iostream>
 #include<string>
 #include<vector>
@@ -17,28 +20,26 @@ private:
   double momentum_x{0};
   double momentum_y{0};
   double momentum_z{0};
-  std::vector<double> four_momentum;
-  std::vector<double>* four_momentum_copy;
-  std::vector<double>* four_momentum_move;
+  std::vector<double>* four_momentum;
   // We need the four-vector, you can leave the particle mass (or remove it, we don't mark it)
 
 
 public:
+  //double operator[](unsigned n) const {return four_momentum[n];}
   // Default Constructor
   particle(): name{}, charge{}, antiparticle{}, energy{}, momentum_x{}, momentum_y{}, momentum_z{}
-  {
-  }
+  {}
 
   // Parameterised Constructor
   // The parameterised constructor needs to dynamically allocate the std::vector containing the four-vector elements
   // The parameterised constructor also needs to check the validity of the energy component
   particle(string particle_name, int particle_charge, bool particle_antiparticle, double particle_energy, double particle_momentum_x, double particle_momentum_y, double particle_momentum_z):
-    name{particle_name}, charge{particle_charge}, antiparticle(particle_antiparticle), energy{particle_energy}, momentum_x{particle_momentum_x}, momentum_y{particle_momentum_y}, momentum_z{particle_momentum_z}
+    name{particle_name}, charge{particle_charge}, antiparticle(particle_antiparticle), energy{particle_energy}, momentum_x{particle_momentum_x}, momentum_y{particle_momentum_y}, momentum_z{particle_momentum_z}, four_momentum{new std::vector<double>}
   {
-    four_momentum.push_back(energy);
-    four_momentum.push_back(momentum_x);
-    four_momentum.push_back(momentum_y);
-    four_momentum.push_back(momentum_z);
+    four_momentum->push_back(energy/speed_of_light);
+    four_momentum->push_back(momentum_x);
+    four_momentum->push_back(momentum_y);
+    four_momentum->push_back(momentum_z);
   }
 
   // Destructor
@@ -46,17 +47,16 @@ public:
   {
     std::cout<<"Destroying "<<name<<std::endl;
     // The destructor needs to free the memory allocated by the constructor
-    delete four_momentum_copy;
+    delete four_momentum;
   }
 
   // Copy constructor
   particle(const particle& copy):
-    name{copy.name}, charge{copy.charge}, antiparticle{copy.antiparticle}, energy{copy.energy}, momentum_x{copy.momentum_x}, momentum_y{copy.momentum_y}, momentum_z{copy.momentum_z}
+    name{copy.name}, charge{copy.charge}, antiparticle{copy.antiparticle}, energy{copy.energy}, momentum_x{copy.momentum_x}, momentum_y{copy.momentum_y}, momentum_z{copy.momentum_z}, four_momentum{new std::vector<double>(*copy.four_momentum)}
   {
     std::cout<<"calling copy constructor\n";
     // The copy constructor needs to make a deep copy of the std::vector holding the 4-momentum
     // Copy constructor with dynamic allocation
-    four_momentum_copy = new std::vector<double>(copy.four_momentum);
   }
 
   // Copy (assignment) operator
@@ -68,20 +68,17 @@ public:
   {
     std::cout<<"calling move constructor\n";
     // The move constructor needs to correctly steal the memory from the object you're calling it on
-    four_momentum_move = nullptr;
+    four_momentum = nullptr;
   }
   
   // Move assignment operator
   particle& operator=(particle&& move) noexcept;
-  
-  // Getter functions (accessors) to individual elements of 4-momentum
-  string get_name() const {return name;}
-  int get_charge() const {return charge;}
-  bool get_antiparticle() const {return antiparticle;}
-  double get_energy() const {return energy;}
-  double get_momentum_x() const {return momentum_x;}
-  double get_momentum_y() const {return momentum_y;}
-  double get_momentum_z() const {return momentum_z;}
+
+  // Sum operator
+  particle operator+(const particle &other) const;
+
+  // Dot product operator
+  double dot_product(const particle& other) const;
 
   // Setter functions, to change values of 4-momentum 
   void set_name(string particle_name)
@@ -121,58 +118,64 @@ public:
     }
     else
     {
-      std::cerr<<"Invalid energy. Energy should be between 0 and the speed of light."<<std::endl;
+      std::cerr<<"Invalid energy. Energy should be positive."<<std::endl;
       exit(0);
     }
   }
 
-  void set_momentum_x(double particle_energy)
+  void set_momentum_x(double particle_momentum_x)
   {
-    if(particle_energy >= 0) // not limiting energy to the speed of light due to change in slides
+    if(particle_momentum_x >= 0) // not limiting energy to the speed of light due to change in slides
     {
-      momentum_x = particle_energy / speed_of_light;
+      momentum_x = particle_momentum_x;
     }
     else
     {
-      std::cerr<<"Invalid energy. Energy should be between 0 and the speed of light."<<std::endl;
+      std::cerr<<"Invalid momentum. Momentum should be between positive."<<std::endl;
       exit(0);
     }
   }
 
-  void set_momentum_y(double particle_energy)
+  void set_momentum_y(double particle_momentum_y)
   {
-    if(particle_energy >= 0) // not limiting energy to the speed of light due to change in slides
+    if(particle_momentum_y >= 0) // not limiting energy to the speed of light due to change in slides
     {
-      momentum_y = particle_energy / speed_of_light;
+      momentum_y = particle_momentum_y;
     }
     else
     {
-      std::cerr<<"Invalid energy. Energy should be between 0 and the speed of light."<<std::endl;
+      std::cerr<<"Invalid momentum. Momentum should be between positive."<<std::endl;
       exit(0);
     }
   }
 
-  void set_momentum_z(double particle_energy)
+  void set_momentum_z(double particle_momentum_z)
   {
-    if(particle_energy >= 0) // not limiting energy to the speed of light due to change in slides
+    if(particle_momentum_z >= 0) // not limiting energy to the speed of light due to change in slides
     {
-      momentum_z = particle_energy / speed_of_light;
+      momentum_z = particle_momentum_z;
     }
     else
     {
-      std::cerr<<"Invalid energy. Energy should be between 0 and the speed of light."<<std::endl;
+      std::cerr<<"Invalid momentum. Momentum should be between positive."<<std::endl;
       exit(0);
     }
   }
 
-  // Sum operator
-  particle operator+(const particle &other) const;
-
-  // Dot product operator
-  double dot_product(const particle& other) const;
+  // Getter functions (accessors) to individual elements of 4-momentum
+  string get_name() const {return name;}
+  int get_charge() const {return charge;}
+  bool get_antiparticle() const {return antiparticle;}
+  double get_energy() const {return energy;}
+  double get_momentum_x() const {return momentum_x;}
+  double get_momentum_y() const {return momentum_y;}
+  double get_momentum_z() const {return momentum_z;}
 
   // Function to print info about a particle 
   void print_data() const;
+  void print_vector() const;
 
 // End of particle class
 };
+
+#endif

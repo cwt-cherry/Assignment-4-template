@@ -16,7 +16,7 @@ using std::string;
 const double speed_of_light = 2.9979245e8; // Unit of m/s
 
 // Random velocity generating function
-double random_energy() 
+double random_value() 
 {
   return static_cast<double>(std::rand()) / RAND_MAX * speed_of_light;
 }
@@ -24,19 +24,17 @@ double random_energy()
 // Main program
 int main()
 {
-  particle p;
-
   // Create the following particles: 
   // two electrons, four muons, one antielectron, one antimuon 
   // Use the parameterised constructor to do these
-  particle electron1("electron", -1, false, random_energy(), p.get_momentum_x(), p.get_momentum_y(), p.get_momentum_z());
-  particle electron2("electron", -1, false, random_energy(), p.get_momentum_x(), p.get_momentum_y(), p.get_momentum_z());
-  particle electron3("positron", 1, true, random_energy(), p.get_momentum_x(), p.get_momentum_y(), p.get_momentum_z());
-  particle muon1("muon", -1, false, random_energy(), p.get_momentum_x(), p.get_momentum_y(), p.get_momentum_z());
-  particle muon2("muon", -1, false, random_energy(), p.get_momentum_x(), p.get_momentum_y(), p.get_momentum_z());
-  particle muon3("muon", -1, false, random_energy(), p.get_momentum_x(), p.get_momentum_y(), p.get_momentum_z());
-  particle muon4("muon", -1, false, random_energy(), p.get_momentum_x(), p.get_momentum_y(), p.get_momentum_z());
-  particle muon5("antimuon", 1, true, random_energy(), p.get_momentum_x(), p.get_momentum_y(), p.get_momentum_z());
+  particle electron1("electron", -1, false, random_value(), random_value(), random_value(), random_value());
+  particle electron2("electron", -1, false, random_value(), random_value(), random_value(), random_value());
+  particle electron3("positron", 1, true, random_value(), random_value(), random_value(), random_value());
+  particle muon1("muon", -1, false, random_value(), random_value(), random_value(), random_value());
+  particle muon2("muon", -1, false, random_value(), random_value(), random_value(), random_value());
+  particle muon3("muon", -1, false, random_value(), random_value(), random_value(), random_value());
+  particle muon4("muon", -1, false, random_value(), random_value(), random_value(), random_value());
+  particle muon5("antimuon", 1, true, random_value(), random_value(), random_value(), random_value());
 
   std::vector<particle> particles;
 
@@ -50,14 +48,32 @@ int main()
   particles.push_back(muon5);
 
   // (optional but nice) Print out the data from all the particles (put them in a vector)
+  for(particle &each_particle: particles)
+  {
+    each_particle.print_data();
+  }
 
   // Sum the four-momenta of the two electrons 
+  particle sum_particle = electron1.operator+(electron2);
+  std::cout<<"sum of 2 electrons is ";
+  sum_particle.print_vector();
+
   // Do the dot product of the first two four-muons
+  double dot_particle = muon1.dot_product(muon2);
+  std::cout<<"dot product of 2 muons is "<<dot_particle<<std::endl;
 
   // Assignment operator of an electron to a new electron
+  particle copy_operator_particle = electron1;
+  copy_operator_particle.print_data();
   // Copy constructor of the first muon to a new muon
+  particle copy_constructor_particle(muon1);
+  copy_constructor_particle.print_data();
   // Move the antielectron into another antielectron using the move constructor 
+  particle move_constructor_particle(std::move(electron3));
+  move_constructor_particle.print_data();
   // Assign the antimuon to another antimuon using the move assignment
+  particle move_operator_particle = muon5;
+  move_operator_particle.print_data();
 
   // (optional but nice) Here or at the end of each step, print the new particle info
   // to convince yourself that you have used all special functions and operations correctly
