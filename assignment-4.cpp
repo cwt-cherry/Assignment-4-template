@@ -10,11 +10,6 @@
 
 using std::string;
 
-// Implementation of functions goes here
-
-// Define variable
-const double speed_of_light = 2.9979245e8; // Unit of m/s
-
 // Random value generating function
 double random_value() 
 {

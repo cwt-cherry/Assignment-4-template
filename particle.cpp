@@ -1,5 +1,6 @@
 #include<iostream>
 #include "particle.h"
+// Implementation of functions goes here
 
 // Assignment operator
 particle& particle::operator=(const particle& copy)
