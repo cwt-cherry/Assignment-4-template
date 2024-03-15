@@ -14,7 +14,7 @@ class particle
 private:
   string name;
   int charge{1}; // -1 or +1
-  const double speed_of_light = 2.9979245e8; // Unit of m/s
+  const double speed_of_light = 1; // natural unit is used as suggested by demonstrator during lab
   bool antiparticle;
   double energy{0}; // Between 0 and c
   double momentum_x{0};

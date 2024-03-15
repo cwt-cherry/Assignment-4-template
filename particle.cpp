@@ -77,6 +77,7 @@ void particle::print_data() const
   std::cout<<"momentum x-component: "<<get_momentum_x()<<" MeV"<<std::endl;
   std::cout<<"momentum y-component: "<<get_momentum_y()<<" MeV"<<std::endl;
   std::cout<<"momentum z-component: "<<get_momentum_z()<<" MeV"<<std::endl;
+  std::cout<<"four momentum vector: "<<"("<<get_energy()<<","<<get_momentum_x()<<","<<get_momentum_y()<<","<<get_momentum_z()<<") MeV"<<std::endl;
   std::cout<<"---------------------------------"<<std::endl;
 }
 
