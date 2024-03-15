@@ -23,11 +23,9 @@ private:
   std::vector<double>* four_momentum;
   // We need the four-vector, you can leave the particle mass (or remove it, we don't mark it)
 
-
 public:
-  //double operator[](unsigned n) const {return four_momentum[n];}
   // Default Constructor
-  particle(): name{}, charge{}, antiparticle{}, energy{}, momentum_x{}, momentum_y{}, momentum_z{}
+  particle(): name{}, charge{}, antiparticle{}, energy{}, momentum_x{}, momentum_y{}, momentum_z{}, four_momentum{}
   {}
 
   // Parameterised Constructor
@@ -51,23 +49,23 @@ public:
   }
 
   // Copy constructor
+  // The copy constructor needs to make a deep copy of the std::vector holding the 4-momentum
+  // Copy constructor with dynamic allocation
   particle(const particle& copy):
     name{copy.name}, charge{copy.charge}, antiparticle{copy.antiparticle}, energy{copy.energy}, momentum_x{copy.momentum_x}, momentum_y{copy.momentum_y}, momentum_z{copy.momentum_z}, four_momentum{new std::vector<double>(*copy.four_momentum)}
   {
     std::cout<<"calling copy constructor\n";
-    // The copy constructor needs to make a deep copy of the std::vector holding the 4-momentum
-    // Copy constructor with dynamic allocation
   }
 
   // Copy (assignment) operator
   particle& operator=(const particle& copy);
 
   // Move constructor
+  // The move constructor needs to correctly steal the memory from the object you're calling it on
   particle(particle&& move) noexcept:
-    name{move.name}, charge{move.charge}, antiparticle{move.antiparticle}, energy{move.energy}, momentum_x{move.momentum_x}, momentum_y{move.momentum_y}, momentum_z{move.momentum_z}
+    name{move.name}, charge{move.charge}, antiparticle{move.antiparticle}, energy{move.energy}, momentum_x{move.momentum_x}, momentum_y{move.momentum_y}, momentum_z{move.momentum_z}, four_momentum{move.four_momentum}
   {
     std::cout<<"calling move constructor\n";
-    // The move constructor needs to correctly steal the memory from the object you're calling it on
     four_momentum = nullptr;
   }
   

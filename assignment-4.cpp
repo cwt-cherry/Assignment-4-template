@@ -15,7 +15,7 @@ using std::string;
 // Define variable
 const double speed_of_light = 2.9979245e8; // Unit of m/s
 
-// Random velocity generating function
+// Random value generating function
 double random_value() 
 {
   return static_cast<double>(std::rand()) / RAND_MAX * speed_of_light;
@@ -54,13 +54,13 @@ int main()
   }
 
   // Sum the four-momenta of the two electrons 
-  particle sum_particle = electron1.operator+(electron2);
-  std::cout<<"sum of 2 electrons is ";
+  particle sum_particle = electron1 + electron2;
+  std::cout<<"Sum of 2 electrons = ";
   sum_particle.print_vector();
 
   // Do the dot product of the first two four-muons
   double dot_particle = muon1.dot_product(muon2);
-  std::cout<<"dot product of 2 muons is "<<dot_particle<<std::endl;
+  std::cout<<"Dot product of 2 muons is "<<dot_particle<<"(MeV)^2"<<std::endl;
 
   // Assignment operator of an electron to a new electron
   particle copy_operator_particle = electron1;
@@ -72,7 +72,7 @@ int main()
   particle move_constructor_particle(std::move(electron3));
   move_constructor_particle.print_data();
   // Assign the antimuon to another antimuon using the move assignment
-  particle move_operator_particle = muon5;
+  particle move_operator_particle = std::move(muon5);
   move_operator_particle.print_data();
 
   // (optional but nice) Here or at the end of each step, print the new particle info
